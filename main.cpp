@@ -1,43 +1,97 @@
 #include <iostream>
+#include <optional>
+#include <stack>
+#include <vector>
 
-using namespace std;
-
-bool BinarySearch(const int* begin, const int* end, int target) {
-  const int* mid = (begin + (end - begin) / 2);
-  if (mid != begin) {
-    if (target >= *mid && target <= *end) {
-      return BinarySearch(mid, end, target);
-    }
-    if (target >= *begin && target <= *mid) {
-      return BinarySearch(begin, mid, target);
-    }
-    return false;
+template <typename T>
+class HeapMax {
+ public:
+  void Insert(T value) {
+    heap_.push_back(value);
+    SiftUp(size_);
+    size_++;
   }
-  return *mid == target;
+  std::optional<T> ExtractMax() {
+    if (size_ == 0) {
+      return std::nullopt;
+    }
+    size_--;
+    std::swap(heap_[0], heap_[size_]);
+    T ret = heap_.back();
+    heap_.pop_back();
+    SiftDown(0);
+    return std::optional<T>(ret);
+  }
+  std::optional<T> GetMax() {
+    if (size_ == 0) {
+      return std::nullopt;
+    }
+    return heap_[0];
+  }
+  size_t Size() { return size_; }
+
+ private:
+  std::vector<T> heap_;
+  size_t size_ = 0;
+  void SiftDown(size_t index);
+  void SiftUp(size_t index);
+};
+
+template <typename T>
+void HeapMax<T>::SiftDown(size_t index) {
+  size_t to_swap_index = index;
+  if (2 * index + 1 < size_ && heap_[2 * index + 1] > heap_[to_swap_index]) {
+    to_swap_index = 2 * index + 1;
+  }
+  if (2 * index + 2 < size_ && heap_[2 * index + 2] > heap_[to_swap_index]) {
+    to_swap_index = 2 * index + 2;
+  }
+  if (to_swap_index == index) {
+    return;
+  }
+  std::swap(heap_[index], heap_[to_swap_index]);
+  SiftDown(to_swap_index);
+}
+
+template <typename T>
+void HeapMax<T>::SiftUp(size_t index) {
+  if (index == 0) {
+    return;
+  }
+  if (heap_[(index - 1) / 2] < heap_[index]) {
+    std::swap(heap_[index], heap_[(index - 1) / 2]);
+    SiftUp((index - 1) / 2);
+  }
 }
 
 int main() {
-  int array_length;
-  cin >> array_length;
-  int* int_array = new int[array_length + 1];
-  for (int i = 0; i < array_length; i++) {
-    cin >> int_array[i];
-  }
-  int_array[array_length] = int_array[array_length - 1];
-  int queries_amount;
-  cin >> queries_amount;
-  int query[3];
-  for (int i = 0; i < queries_amount; i++) {
-    cin >> query[0] >> query[1] >> query[2];
-    if (query[1] >= array_length) {
-      query[1] = array_length;
-    }
-    if (BinarySearch(&int_array[query[0]], &int_array[query[1]], query[2])) {
-      cout << "YES\n";
+  HeapMax<std::uint64_t> heap;
+  std::uint64_t size_of_sequence;
+  std::uint64_t to_out_amount;
+  std::uint64_t a0;
+  std::uint64_t x;
+  std::uint64_t y;
+  std::cin >> size_of_sequence >> to_out_amount >> a0 >> x >> y;
+  std::uint64_t curr = a0;
+  for (std::uint64_t i = 0; i < size_of_sequence; ++i) {
+    curr = (x * curr + y) % (1073741824ull);
+    if (heap.Size() >= to_out_amount) {
+      if (heap.GetMax() > curr) {
+        heap.ExtractMax();
+        heap.Insert(curr);
+      }
     } else {
-      cout << "NO\n";
+      heap.Insert(curr);
     }
   }
-  delete[](int_array);
+  std::stack<std::uint64_t> out;
+  while (heap.Size() != 0) {
+    out.push(heap.ExtractMax().value());
+  }
+  while (!out.empty()) {
+    std::cout << out.top() << " ";
+    out.pop();
+  }
+  std::cout << "\n";
   return 0;
 }
