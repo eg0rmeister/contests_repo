@@ -2,7 +2,18 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::min;
+using std::string;
+
+const string kPush = "enqueue";
+const string kPop = "dequeue";
+const string kFront = "front";
+const string kSize = "size";
+const string kClear = "clear";
+const string kMin = "min";
 
 struct Node {
   int number;
@@ -144,20 +155,20 @@ int main() {
   cin >> number_of_commands;
   for (int i = 0; i < number_of_commands; ++i) {
     cin >> command;
-    if (command == "enqueue") {
+    if (command == kPush) {
       cin >> number;
       deque.Push(number);
       cout << "ok" << endl;
-    } else if (command == "dequeue") {
+    } else if (command == kPop) {
       ConditionOut(deque.Pop());
-    } else if (command == "front") {
+    } else if (command == kFront) {
       ConditionOut(deque.Front());
-    } else if (command == "size") {
+    } else if (command == kSize) {
       cout << deque.Size() << endl;
-    } else if (command == "clear") {
+    } else if (command == kClear) {
       deque.Clear();
       cout << "ok" << endl;
-    } else if (command == "min") {
+    } else if (command == kMin) {
       ConditionOut(deque.Min());
     }
   }
