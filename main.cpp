@@ -17,9 +17,7 @@ int* BinarySearch(int* begin, int* end) {
   return begin;
 }
 
-void input_sequence(int* array) {
-  size_t array_length;
-  cin >> array_length;
+void InputArray(int* array, size_t array_length) {
   for (size_t i = 0; i < array_length; i++) {
     cin >> int_array[i];
   }
@@ -27,8 +25,10 @@ void input_sequence(int* array) {
 }
 
 int main() {
+  size_t array_length;
+  cin >> array_length;
   int* int_array = new int[array_length + 1];
-  input_sequence(int_array);
+  InputArray(int_array, array_length);
   int* result = BinarySearch(int_array, int_array + (array_length - 1));
   cout << result - int_array << endl;
   delete[](int_array);
