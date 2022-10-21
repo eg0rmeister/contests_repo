@@ -19,7 +19,7 @@ int* BinarySearch(int* begin, int* end) {
 
 void InputArray(int* array, size_t array_length) {
   for (size_t i = 0; i < array_length; i++) {
-    cin >> int_array[i];
+    cin >> array[i];
   }
   cout << "\n";
 }
