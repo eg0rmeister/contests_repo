@@ -2,28 +2,31 @@
 
 using namespace std;
 
-int main() {
-  int array_length;
-  cin >> array_length;
-  int* int_array = new int[array_length + 1];
-  for (int i = 0; i < array_length; i++) {
-    cin >> int_array[i];
-  }
-  cout << "\n";
-  int begin = 0;
-  int end = array_length - 1;
-  int mid = (begin + end) / 2;
-  while (int_array[begin] > int_array[end]) {
+int* BinarySearch(int* begin, int* end) {
+  int* mid = begin + (end - begin) / 2;
+  while (*begin > *end) {
     if (begin == mid) {
       begin = end;
-    } else if (int_array[end] < int_array[mid]) {
+    } else if (*end < *mid) {
       begin = mid;
     } else {
       end = mid;
     }
-    mid = (begin + end) / 2;
+    mid = begin + (end - begin) / 2;
   }
-  cout << begin << endl;
+  return begin;
+}
+
+int main() {
+  size_t array_length;
+  cin >> array_length;
+  int* int_array = new int[array_length + 1];
+  for (size_t i = 0; i < array_length; i++) {
+    cin >> int_array[i];
+  }
+  cout << "\n";
+  int* result = BinarySearch(int_array, int_array + (array_length - 1));
+  cout << result - int_array << endl;
   delete[](int_array);
   return 0;
 }
